@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Dijkstra's Visualizer</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            color: #343a40;
+        }
+
+        h1 {
+            color: #007bff;
+        }
+
+        #canvas {
+            border: 1px solid #007bff;
+            background-image: url('map.jpeg');
+            background-size: cover;
+        }
+
+        .form-label {
+            color: #007bff;
+        }
+
+        .form-control {
+            background-color: #f1f1f1;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #0056b3;
+        }
+
+        #distance {
+            color: #007bff;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center mb-5">Dijkstra's Visualizer</h1>
+        <div class="row mb-3">
+            <div class="col">
+                <label for="startNode" class="form-label">Start Node:</label>
+                <select class="form-select" id="startNode">
+                    <option value="0">North slope borough</option>
+                    <option value="1">Yukon</option>
+                    <!-- Add more options for other nodes -->
+                </select>
+            </div>
+            <div class="col">
+                <label for="endNode" class="form-label">End Node:</label>
+                <select class="form-select" id="endNode">
+                    <option value="0">North slope borough</option>
+                    <option value="1">Yukon</option>
+                    <!-- Add more options for other nodes -->
+                </select>
+            </div>
+        </div>
+        <div class="mb-3">
+            <label for="message" class="form-label">Message:</label>
+            <textarea class="form-control" id="message" rows="1"></textarea>
+        </div>
+        <div class="mb-3 text-center">
+            <button id="encodeAndVisualizeBtn" class="btn btn-primary">Encode and Visualize</button>
+        </div>
+        <div class="mb-3 text-center">
+            <label for="encodedMessage" class="form-label">Encoded Message:</label>
+            <textarea class="form-control" id="encodedMessage" rows="1" readonly></textarea>
+        </div>
+        <div class="mb-3 text-center">
+            <button id="decodeBtn" class="btn btn-primary" style="display: none;">Decode</button>
+        </div>
+        <canvas id="canvas" width=1200 height=600></canvas>
+        <div class="text-center mt-3">
+            <div id="distance" style='display: inline;'></div>
+        </div>
+
+        <div class="text-center mt-3">
+            <label for="decodedMessage" class="form-label">Decoded Message:</label>
+            <textarea class="form-control" id="decodedMessage" rows="1" readonly></textarea>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+    <script src="hamming.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>
