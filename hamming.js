@@ -28,6 +28,7 @@ class HammingCode {
         //     encodedMessage += parityBits + group;
         // }
 
+        // making some changes
 
         let encodedValue = btoa(paddedMessage);
         this.encodedMessage = encodedValue;
