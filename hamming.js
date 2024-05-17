@@ -1,4 +1,4 @@
-// Define HammingCode class
+// Define HammingCode class - not needed anymore
 class HammingCode {
     constructor(message) {
         this.message = message;
@@ -27,8 +27,6 @@ class HammingCode {
         //     // Add parity bits to the encoded message
         //     encodedMessage += parityBits + group;
         // }
-
-        // making some changes
 
         let encodedValue = btoa(paddedMessage);
         this.encodedMessage = encodedValue;
@@ -65,23 +63,153 @@ class HammingCode {
     
 
 }
+// Hamming code changes - start
+function encodingChangescore(inputString) {
+    let binaryData = '';
+    for (let i = 0; i < inputString.length; i++) {
+        let charBinary = inputString[i].charCodeAt(0).toString(2);
+        charBinary = '0'.repeat(8 - charBinary.length) + charBinary;
+        binaryData += charBinary;
+    }
+    let siz = binaryData.length;
+    let pb;
+    for (let x = 0; x < siz; x++) {
+        let power = Math.pow(2, x);
+        if (power >= siz) {
+            pb = x;
+            break;
+        }
+    }
+    let truesize = pb + siz + 2;
+    let data = new Array(truesize).fill(0);
+    let rec = new Array(truesize).fill(0);
 
-// Mere changes 
-function encodingChanges(inputString) {
-    // Perform some processing on the input string
-    let encodedValue = btoa(inputString);
-
-    return encodedValue;
+    let j = 1;
+    for (let i = 1; i < truesize; i++) {
+        if (i !== j) {
+            data[i] = parseInt(binaryData.charAt(siz - 1), 10);
+            siz--;
+        } else {
+            data[i] = 0;
+            j *= 2;
+        }
+    }
+    let count = 0;
+    for (let i = 1; i < truesize; i *= 2) {
+        for (let j = i; j < truesize; j += i) {
+            for (let k = 0; k < i; k++) {
+                if (data[j] === 1) {
+                    count++;
+                }
+                j++;
+                if (j === truesize) {
+                    break;
+                }
+            }
+        }
+        if (count % 2 === 0) {
+            data[i] = 0;
+            count = 0;
+        } else {
+            data[i] = 1;
+            count = 0;
+        }
+    }
+    let hammingCode = '';
+    for (let l = truesize - 1; l > 0; l--) {
+        hammingCode += data[l];
+    }
+    return hammingCode;
 }
 
-function decodingChanges(inputString) {
-    // Perform some processing on the input string
-    let decodedValue = atob(inputString);
+function decodingChangescore(inputString) {
+    let hammingCode = inputString.split('').map(Number);
 
-    return decodedValue;
+    let truesize = hammingCode.length;
+    let siz = truesize - Math.floor(Math.log2(truesize)) - 1;
+
+    let data = new Array(truesize).fill(0);
+    let pb = Math.floor(Math.log2(truesize - 1));
+    let pbarr = new Array(pb + 1).fill(0);
+
+    for (let i = 1; i < truesize; i++) {
+        data[i] = hammingCode[truesize - i];
+    }
+
+    let count = 0;
+    let idx = 0;
+    for (let i = 1; i < truesize; i *= 2) {
+        for (let j = i; j < truesize; j += i) {
+            for (let k = 0; k < i; k++) {
+                if (data[j] === 1) {
+                    count++;
+                }
+                j++;
+                if (j === truesize) {
+                    break;
+                }
+            }
+        }
+        if (count % 2 !== 0) {
+            pbarr[idx] = 1;
+        }
+        idx++;
+        count = 0;
+    }
+
+    let errorPosition = 0;
+    for (let i = 0; i < pbarr.length; i++) {
+        errorPosition += pbarr[i] * Math.pow(2, i);
+    }
+
+    if (errorPosition !== 0) {
+        data[errorPosition] = data[errorPosition] === 0 ? 1 : 0;
+    }
+
+    let originalBinary = '';
+    for (let i = 1; i < truesize; i++) {
+        if (i !== Math.pow(2, Math.floor(Math.log2(i)))) {
+            originalBinary = data[i] + originalBinary;
+        }
+    }
+
+    let originalString = '';
+    for (let i = 0; i < originalBinary.length; i += 8) {
+        originalString += String.fromCharCode(parseInt(originalBinary.substr(i, 8), 2));
+    }
+
+    return originalString;
 }
 
-// ENd changes 
+function encodingChanges(inputString){
+    let encodedMessage = '';
+    for (let i = 0; i < inputString.length; i++) {
+        let xyz = encodingChangescore(inputString[i]); 
+        encodedMessage += xyz;
+        console.log(xyz);
+        if(i != inputString.length -1 ){
+            encodedMessage += ' ';
+        }
+    }
+    console.log(encodedMessage);
+    return encodedMessage;
+    
+}
+
+function decodingChanges(inputString){
+    let decodedMessage = '';
+    let encodedChars = inputString.split(' ');
+    for (let i = 0; i < encodedChars.length; i++) {
+        console.log(encodedChars[i]);
+        let decodedChar = decodingChangescore(encodedChars[i]);
+        
+        decodedMessage += decodedChar;
+        
+    }
+    return decodedMessage;
+}
+
+// changes  END
 
 
 
@@ -362,6 +490,5 @@ document.addEventListener("DOMContentLoaded", () => {
             alert("Please select valid start and end nodes.");
         }
     });
-
 
 });
