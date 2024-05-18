@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Huffman Encoding</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            margin: 20px;
+        }
+        table {
+            border-collapse: collapse;
+            width: 50%;
+            margin-top: 20px;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Huffman Encoding</h1>
+        <form id="huffmanForm">
+            <label for="sentence">Enter a sentence:</label><br>
+            <input type="text" id="sentence" name="sentence"><br><br>
+            <input type="submit" value="Encode">
+        </form>
+        <div id="result"></div>
+    </div>
+
+    <script src="huffman.js"></script>
+</body>
+</html>
