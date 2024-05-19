@@ -1,83 +1,212 @@
 <!DOCTYPE html>
 <html>
-<head>
+  <head>
     <title>Algorithm Visualizations</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-        }
-        h1 {
-            margin-top: 30px;
-        }
-        .algo-description {
-            margin-bottom: 20px;
-        }
-        table {
-            width: 100%;
-            margin-top: 30px;
-            border-collapse: collapse;
-        }
-        table, th, td {
-            border: 1px solid black;
-            padding: 8px;
-            text-align: center;
-        }
-        th {
-            background-color: #f2f2f2;
-        }
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+      }
+      h1 {
+        margin-top: 30px;
+      }
+      .algo-description {
+        margin-bottom: 20px;
+      }
+      table {
+        width: 100%;
+        margin-top: 30px;
+        border-collapse: collapse;
+      }
+      table,
+      th,
+      td {
+        border: 1px solid black;
+        padding: 8px;
+        text-align: center;
+      }
+      th {
+        background-color: #f2f2f2;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <h1>Algorithm Visualizations</h1>
-
+    <hr />
     <div class="algo-description">
-        <h2>Dijkstra's Algorithm</h2>
-        <p>Dijkstra's algorithm is used to find the shortest path from a single source vertex to all other vertices in a weighted graph.</p>
-        <p>Time Complexity: O(V^2) for adjacency matrix representation, O((V + E)logV) for adjacency list representation using priority queue.</p>
+      <h2>Dijkstra's Algorithm</h2>
+      <p>
+        Dijkstra's algorithm is used to find the shortest path from a single
+        source vertex to all other vertices in a weighted graph.
+      </p>
+      <p>
+        <b>Time Complexity:</b> O(V^2) for adjacency matrix representation, O((V
+        + E)logV) for adjacency list representation using priority queue.
+      </p>
+    </div>
+
+    <div class="algo">
+      <h3>Algorithm for Dijkstra’s Algorithm:</h3>
+      <ul>
+        <li>
+          Mark the source node with a current distance of 0 and the rest with
+          infinity.
+        </li>
+        <li>
+          Set the non-visited node with the smallest current distance as the
+          current node.
+        </li>
+        <li>
+          For each neighbor, N of the current node adds the current distance of
+          the adjacent node with the weight of the edge connecting 0->1. If it
+          is smaller than the current distance of Node, set it as the new
+          current distance of N.
+        </li>
+        <li>Mark the current node 1 as visited.</li>
+        <li>Go to step 2 if there are any nodes are unvisited.</li>
+      </ul>
     </div>
 
     <iframe src="dijkstra_final.html" width="100%" height="500px"></iframe>
 
+    <hr />
     <div class="algo-description">
-        <h2>Floyd Warshall Algorithm</h2>
-        <p>The Floyd Warshall algorithm is used to find the shortest paths between all pairs of vertices in a weighted graph with positive or negative edge weights.</p>
-        <p>Time Complexity: O(V^3).</p>
+      <h2>Floyd Warshall Algorithm</h2>
+      <p>
+        The Floyd Warshall algorithm is used to find the shortest paths between
+        all pairs of vertices in a weighted graph with positive or negative edge
+        weights.
+      </p>
+      <p><b>Time Complexity: </b> O(V^3).</p>
+    </div>
+
+    <div class="algo">
+      <h3>Algorithm for Floyd Warshall Algorithm:</h3>
+      <ul>
+        <li>
+          Initialize the solution matrix same as the input graph matrix as a
+          first step.
+        </li>
+        <li>
+          Then update the solution matrix by considering all vertices as an
+          intermediate vertex.
+        </li>
+        <li>
+          The idea is to pick all vertices one by one and updates all shortest
+          paths which include the picked vertex as an intermediate vertex in the
+          shortest path.
+        </li>
+        <li>
+          When we pick vertex number k as an intermediate vertex, we already
+          have considered vertices {0, 1, 2, .. k-1} as intermediate vertices.
+        </li>
+        <li>
+          GFor every pair (i, j) of the source and destination vertices
+          respectively, there are two possible cases.
+          <ul>
+            <li>
+              k is not an intermediate vertex in shortest path from i to j. We
+              keep the value of dist[i][j] as it is.
+            </li>
+            <li>
+              k is an intermediate vertex in shortest path from i to j. We
+              update the value of
+              <b>
+                dist[i][j] as dist[i][k] + dist[k][j], if dist[i][j] >
+                dist[i][k] + dist[k][j]</b
+              >
+            </li>
+          </ul>
+        </li>
+      </ul>
     </div>
 
     <iframe src="floyd_warshall.html" width="100%" height="500px"></iframe>
-
+    <hr />
     <div class="algo-description">
-        <h2>A* Algorithm</h2>
-        <p>The A* algorithm is used to find the shortest path between two nodes in a graph. It uses heuristics to improve the efficiency of the search.</p>
-        <p>Time Complexity: O(E) in the worst case, where E is the number of edges examined.</p>
+      <h2>A* Algorithm</h2>
+      <p>
+        The A* algorithm is used to find the shortest path between two nodes in
+        a graph. It uses heuristics to improve the efficiency of the search.
+      </p>
+      <p>
+        <b>Time Complexity:</b> O(E) in the worst case, where E is the number of
+        edges examined.
+      </p>
+    </div>
+
+    <div class="algo">
+      <h3>Algorithm for A* Search Algorithm:</h3>
+      <ul>
+        <li>Initialize the open list</li>
+        <li>
+          Initialize the closed list put the starting node on the open list (you
+          can leave its f at zero)
+        </li>
+        <li>
+          While the open list is not empty
+          <ul>
+            <li>
+              Find the node with the least f on the open list, call it "q"
+            </li>
+            <li>Pop q off the open list</li>
+            <li>Generate q's 8 successors and set their parents to q</li>
+            <li>
+              For each successor
+              <ul>
+                <li>if successor is the goal, stop search</li>
+                <li>
+                  else, compute both g and h for successor successor.g = q.g +
+                  distance between successor and q successor.h = distance from
+                  goal to successor (This can be done using many ways, we will
+                  discuss three heuristics- Manhattan, Diagonal and Euclidean
+                  Heuristics) successor.f = successor.g + successor.h
+                </li>
+                <li>
+                  if a node with the same position as successor is in the OPEN
+                  list which has a lower f than successor, skip this successor
+                </li>
+                <li>
+                  if a node with the same position as successor is in the CLOSED
+                  list which has a lower f than successor, skip this successor
+                  otherwise, add the node to the open list end (for loop)
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+        <li>push q on the closed list end (while loop)</li>
+      </ul>
     </div>
 
     <iframe src="astar.html" width="100%" height="500px"></iframe>
-
+    <hr />
     <h1>Algorithm Comparison</h1>
     <table>
-        <tr>
-            <th>Algorithm</th>
-            <th>Time Complexity</th>
-            <th>Space Complexity</th>
-        </tr>
-        <tr>
-            <td>Dijkstra's</td>
-            <td>O(V^2) or O((V + E)logV)</td>
-            <td>O(V)</td>
-        </tr>
-        <tr>
-            <td>Floyd Warshall</td>
-            <td>O(V^3)</td>
-            <td>O(V^2)</td>
-        </tr>
-        <tr>
-            <td>A*</td>
-            <td>O(E)</td>
-            <td>O(V)</td>
-        </tr>
+      <tr>
+        <th>Algorithm</th>
+        <th>Time Complexity</th>
+        <th>Space Complexity</th>
+      </tr>
+      <tr>
+        <td>Dijkstra's</td>
+        <td>O(V^2) or O((V + E)logV)</td>
+        <td>O(V)</td>
+      </tr>
+      <tr>
+        <td>Floyd Warshall</td>
+        <td>O(V^3)</td>
+        <td>O(V^2)</td>
+      </tr>
+      <tr>
+        <td>A*</td>
+        <td>O(E)</td>
+        <td>O(V)</td>
+      </tr>
     </table>
-</body>
+  </body>
 </html>
