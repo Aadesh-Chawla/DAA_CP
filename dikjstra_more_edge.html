@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Map with Shortest Path</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+  <style>
+    #map {
+      height: 100vh;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="map"></div>
+  <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+  <script>
+    var map = L.map('map').setView([0, 0], 2);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+    var cities = [
+      { name: 'Pune', coordinates: [18.5204, 73.8567] },
+      { name: 'Chennai', coordinates: [13.0827, 80.2707] },
+      { name: 'Shanghai', coordinates: [31.2304, 121.4737] },
+      { name: 'Canberra', coordinates: [-35.2809, 149.1300] },
+      { name: 'Tokyo', coordinates: [35.6895, 139.6917] },
+      { name: 'Seoul', coordinates: [37.5665, 126.9780] },
+      { name: 'Virginia', coordinates: [37.4316, -78.6569] },
+      { name: 'Texas', coordinates: [31.9686, -99.9018] },
+      { name: 'Washington', coordinates: [38.9072, -77.0369] },
+      { name: 'London', coordinates: [51.5074, -0.1278] },
+      { name: 'Dublin', coordinates: [53.3498, -6.2603] },
+      { name: 'Hamina', coordinates: [60.5697, 27.1979] },
+      { name: 'Hanau', coordinates: [50.1218, 8.9290] },
+      { name: 'Middenmeer', coordinates: [52.8081, 4.9497] },
+      { name: 'St. Ghislain', coordinates: [50.4582, 3.8191] },
+      { name: 'Singapore', coordinates: [1.3521, 103.8198] }
+    ];
+
+    var staticEdges = [
+    // Routes from Pune
+    [0, 1], [0, 2], [0, 3],
+
+    // Routes from Chennai
+    [1, 3], [1, 4], [1, 5],
+
+    // Routes from Shanghai
+    [2, 4], [2, 5], [2, 6],
+
+    // Routes from Canberra
+    [3, 6], [3, 7], [3, 8],
+
+    // Routes from Tokyo
+    [4, 8], [4, 9], [4, 10],
+
+    // Routes from Seoul
+    [5, 9], [5, 10], [5, 11],
+
+    // Routes from Virginia
+    [6, 11], [6, 12], [6, 13],
+
+    // Routes from Texas
+    [7, 13], [7, 14], [7, 15],
+
+    // Routes from Washington
+    [8, 14]
+];
+
+
+    function calculateDistance(coord1, coord2) {
+      var R = 6371; // Radius of the Earth in km
+      var dLat = (coord2[0] - coord1[0]) * Math.PI / 180;
+      var dLon = (coord2[1] - coord1[1]) * Math.PI / 180;
+      var a =
+        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(coord1[0] * Math.PI / 180) * Math.cos(coord2[0] * Math.PI / 180) *
+        Math.sin(dLon / 2) * Math.sin(dLon / 2);
+      var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+      var d = R * c; // Distance in km
+      return d;
+    }
+
+    function dijkstra(graph, start) {
+      var distances = Array(graph.length).fill(Infinity);
+      var prev = Array(graph.length).fill(null);
+      var pq = new PriorityQueue();
+
+      distances[start] = 0;
+      pq.enqueue(start, 0);
+
+      while (!pq.isEmpty()) {
+        var minNode = pq.dequeue().element;
+        graph[minNode].forEach(neighbor => {
+          var alt = distances[minNode] + neighbor.distance;
+          if (alt < distances[neighbor.node]) {
+            distances[neighbor.node] = alt;
+            prev[neighbor.node] = minNode;
+            pq.enqueue(neighbor.node, alt);
+          }
+        });
+      }
+
+      return { distances, prev };
+    }
+
+    class PriorityQueue {
+      constructor() {
+        this.items = [];
+      }
+
+      enqueue(element, priority) {
+        var queueElement = { element, priority };
+        var added = false;
+        for (var i = 0; i < this.items.length; i++) {
+          if (queueElement.priority < this.items[i].priority) {
+            this.items.splice(i, 0, queueElement);
+            added = true;
+            break;
+          }
+        }
+        if (!added) {
+          this.items.push(queueElement);
+        }
+      }
+
+      dequeue() {
+        return this.items.shift();
+      }
+
+      isEmpty() {
+        return this.items.length === 0;
+      }
+    }
+
+    var grayIcon = L.icon({
+      iconUrl: 'google.jpg',
+      iconSize: [25, 41],
+      iconAnchor: [12, 41],
+      popupAnchor: [1, -34],
+      tooltipAnchor: [16, -28]
+    });
+
+    // Draw grey edges
+    staticEdges.forEach(edge => {
+      var from = cities[edge[0]].coordinates;
+      var to = cities[edge[1]].coordinates;
+      L.polyline([from, to], { color: 'grey' }).addTo(map);
+    });
+
+    var startSelected = false;
+    var startCoords;
+    var endCoords;
+
+    cities.forEach(function (city, index) {
+      var marker = L.marker(city.coordinates, { icon: grayIcon }).addTo(map).bindPopup(city.name);
+      marker.on('click', function () {
+        if (!startSelected) {
+          startCoords = city.coordinates;
+          L.marker(startCoords).addTo(map).bindPopup('Start Point').openPopup();
+          startSelected = true;
+        } else if (!endCoords && startSelected) {
+          endCoords = city.coordinates;
+          L.marker(endCoords).addTo(map).bindPopup('End Point').openPopup();
+
+          var graph = cities.map((city, i) => {
+            return staticEdges.filter(edge => edge.includes(i)).map(edge => {
+              var neighborIndex = edge[0] === i ? edge[1] : edge[0];
+              return { node: neighborIndex, distance: calculateDistance(city.coordinates, cities[neighborIndex].coordinates) };
+            });
+          });
+
+          var startIdx = cities.findIndex(city => city.coordinates.toString() === startCoords.toString());
+          var endIdx = cities.findIndex(city => city.coordinates.toString() === endCoords.toString());
+
+          var { distances, prev } = dijkstra(graph, startIdx);
+
+          var path = [];
+          for (var at = endIdx; at !== null; at = prev[at]) {
+            path.push(at);
+          }
+          path.reverse();
+
+          var pathCoords = path.map(index => cities[index].coordinates);
+
+          // Animate the drawing of the path
+          var polyline = L.polyline([], { color: 'blue' }).addTo(map);
+          var i = 0;
+          function drawPath() {
+            if (i < pathCoords.length) {
+              polyline.addLatLng(pathCoords[i]);
+              i++;
+              setTimeout(drawPath, 500); // Adjust the delay as needed
+            }
+          }
+          drawPath();
+        }
+      });
+    });
+  </script>
+</body>
+
+</html>

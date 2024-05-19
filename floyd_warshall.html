@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Map with Shortest Path</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+  <style>
+    #map {
+      height: 100vh;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="map"></div>
+  <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+  <script>
+    var map = L.map('map').setView([0, 0], 2);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+    var cities = [
+      { name: 'Pune', coordinates: [18.5204, 73.8567] },
+      { name: 'Chennai', coordinates: [13.0827, 80.2707] },
+      { name: 'Shanghai', coordinates: [31.2304, 121.4737] },
+      { name: 'Canberra', coordinates: [-35.2809, 149.1300] },
+      { name: 'Tokyo', coordinates: [35.6895, 139.6917] },
+      { name: 'Seoul', coordinates: [37.5665, 126.9780] },
+      { name: 'Virginia', coordinates: [37.4316, -78.6569] },
+      { name: 'Texas', coordinates: [31.9686, -99.9018] },
+      { name: 'Washington', coordinates: [38.9072, -77.0369] },
+      { name: 'London', coordinates: [51.5074, -0.1278] },
+      { name: 'Dublin', coordinates: [53.3498, -6.2603] },
+      { name: 'Hamina', coordinates: [60.5697, 27.1979] },
+      { name: 'Hanau', coordinates: [50.1218, 8.9290] },
+      { name: 'Middenmeer', coordinates: [52.8081, 4.9497] },
+      { name: 'St. Ghislain', coordinates: [50.4582, 3.8191] },
+      { name: 'Singapore', coordinates: [1.3521, 103.8198] }
+    ];
+
+    var staticEdges = [
+      [0, 1], [1, 2], [2, 3], [3, 4],
+      [4, 5], [5, 6], [6, 7], [7, 8],
+      [8, 9], [9, 10], [10, 11], [11, 12],
+      [12, 13], [13, 14], [14, 15]
+    ];
+
+    function calculateDistance(coord1, coord2) {
+      var R = 6371; // Radius of the Earth in km
+      var dLat = (coord2[0] - coord1[0]) * Math.PI / 180;
+      var dLon = (coord2[1] - coord1[1]) * Math.PI / 180;
+      var a =
+        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(coord1[0] * Math.PI / 180) * Math.cos(coord2[0] * Math.PI / 180) *
+        Math.sin(dLon / 2) * Math.sin(dLon / 2);
+      var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+      var d = R * c; // Distance in km
+      return d;
+    }
+
+    function floydWarshall(graph) {
+      var dist = [];
+      var next = [];
+      var len = graph.length;
+
+      for (var i = 0; i < len; i++) {
+        dist[i] = [];
+        next[i] = [];
+        for (var j = 0; j < len; j++) {
+          if (i === j) {
+            dist[i][j] = 0;
+          } else if (graph[i][j] !== Infinity) {
+            dist[i][j] = graph[i][j];
+            next[i][j] = j;
+          } else {
+            dist[i][j] = Infinity;
+            next[i][j] = null;
+          }
+        }
+      }
+
+      for (var k = 0; k < len; k++) {
+        for (var i = 0; i < len; i++) {
+          for (var j = 0; j < len; j++) {
+            if (dist[i][k] + dist[k][j] < dist[i][j]) {
+              dist[i][j] = dist[i][k] + dist[k][j];
+              next[i][j] = next[i][k];
+            }
+          }
+        }
+      }
+
+      return { dist, next };
+    }
+
+    function getPath(next, u, v) {
+      if (next[u][v] === null) return [];
+      var path = [u];
+      while (u !== v) {
+        u = next[u][v];
+        path.push(u);
+      }
+      return path;
+    }
+
+    var grayIcon = L.icon({
+      iconUrl: 'google.jpg',
+      iconSize: [25, 41],
+      iconAnchor: [12, 41],
+      popupAnchor: [1, -34],
+      tooltipAnchor: [16, -28]
+    });
+
+    // Draw grey edges
+    staticEdges.forEach(edge => {
+      var from = cities[edge[0]].coordinates;
+      var to = cities[edge[1]].coordinates;
+      L.polyline([from, to], { color: 'grey' }).addTo(map);
+    });
+
+    var startSelected = false;
+    var startCoords;
+    var endCoords;
+
+    cities.forEach(function (city, index) {
+      var marker = L.marker(city.coordinates, { icon: grayIcon }).addTo(map).bindPopup(city.name);
+      marker.on('click', function () {
+        if (!startSelected) {
+          startCoords = city.coordinates;
+          L.marker(startCoords).addTo(map).bindPopup('Start Point').openPopup();
+          startSelected = true;
+        } else if (!endCoords && startSelected) {
+          endCoords = city.coordinates;
+          L.marker(endCoords).addTo(map).bindPopup('End Point').openPopup();
+
+          var len = cities.length;
+          var graph = Array.from({ length: len }, () => Array(len).fill(Infinity));
+          staticEdges.forEach(([u, v]) => {
+            var dist = calculateDistance(cities[u].coordinates, cities[v].coordinates);
+            graph[u][v] = dist;
+            graph[v][u] = dist;
+          });
+
+          var startIdx = cities.findIndex(city => city.coordinates.toString() === startCoords.toString());
+          var endIdx = cities.findIndex(city => city.coordinates.toString() === endCoords.toString());
+
+          var { dist, next } = floydWarshall(graph);
+
+          var path = getPath(next, startIdx, endIdx);
+          var pathCoords = path.map(index => cities[index].coordinates);
+
+          // Animate the drawing of the path
+          var polyline = L.polyline([], { color: 'blue' }).addTo(map);
+          var i = 0;
+          function drawPath() {
+            if (i < pathCoords.length) {
+              polyline.addLatLng(pathCoords[i]);
+              i++;
+              setTimeout(drawPath, 500); // Adjust the delay as needed
+            }
+          }
+          drawPath();
+        }
+      });
+    });
+  </script>
+</body>
+
+</html>
