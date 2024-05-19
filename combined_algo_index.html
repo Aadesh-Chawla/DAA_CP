@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Algorithm Visualizations</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        h1 {
+            margin-top: 30px;
+        }
+        .algo-description {
+            margin-bottom: 20px;
+        }
+        table {
+            width: 100%;
+            margin-top: 30px;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <h1>Algorithm Visualizations</h1>
+
+    <div class="algo-description">
+        <h2>Dijkstra's Algorithm</h2>
+        <p>Dijkstra's algorithm is used to find the shortest path from a single source vertex to all other vertices in a weighted graph.</p>
+        <p>Time Complexity: O(V^2) for adjacency matrix representation, O((V + E)logV) for adjacency list representation using priority queue.</p>
+    </div>
+
+    <iframe src="dijkstra_final.html" width="100%" height="500px"></iframe>
+
+    <div class="algo-description">
+        <h2>Floyd Warshall Algorithm</h2>
+        <p>The Floyd Warshall algorithm is used to find the shortest paths between all pairs of vertices in a weighted graph with positive or negative edge weights.</p>
+        <p>Time Complexity: O(V^3).</p>
+    </div>
+
+    <iframe src="floyd_warshall.html" width="100%" height="500px"></iframe>
+
+    <div class="algo-description">
+        <h2>A* Algorithm</h2>
+        <p>The A* algorithm is used to find the shortest path between two nodes in a graph. It uses heuristics to improve the efficiency of the search.</p>
+        <p>Time Complexity: O(E) in the worst case, where E is the number of edges examined.</p>
+    </div>
+
+    <iframe src="astar.html" width="100%" height="500px"></iframe>
+
+    <h1>Algorithm Comparison</h1>
+    <table>
+        <tr>
+            <th>Algorithm</th>
+            <th>Time Complexity</th>
+            <th>Space Complexity</th>
+        </tr>
+        <tr>
+            <td>Dijkstra's</td>
+            <td>O(V^2) or O((V + E)logV)</td>
+            <td>O(V)</td>
+        </tr>
+        <tr>
+            <td>Floyd Warshall</td>
+            <td>O(V^3)</td>
+            <td>O(V^2)</td>
+        </tr>
+        <tr>
+            <td>A*</td>
+            <td>O(E)</td>
+            <td>O(V)</td>
+        </tr>
+    </table>
+</body>
+</html>
