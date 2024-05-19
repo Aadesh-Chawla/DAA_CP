@@ -10,10 +10,21 @@
     #map {
       height: 100vh;
     }
+
+    #distanceDisplay {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background: white;
+      padding: 10px;
+      border: 1px solid black;
+      z-index: 1000;
+    }
   </style>
 </head>
 
 <body>
+  <div id="distanceDisplay">Distance: 0 km | Time: 0 ms</div>
   <div id="map"></div>
   <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
   <script>
@@ -43,10 +54,11 @@
     ];
 
     var staticEdges = [
-      [0, 1], [1, 2], [2, 3], [3, 4],
-      [4, 5], [5, 6], [6, 7], [7, 8],
-      [8, 9], [9, 10], [10, 11], [11, 12],
-      [12, 13], [13, 14], [14, 15]
+      [0, 1], [0, 4], [1, 4], [1, 2],
+      [2, 5], [3, 4], [3, 15], [4, 5],
+      [5, 6], [5, 15], [6, 8], [7, 8],
+      [7, 6], [8, 9], [9, 10], [10, 11],
+      [11, 12], [12, 13], [13, 14]
     ];
 
     function calculateDistance(coord1, coord2) {
@@ -107,7 +119,7 @@
     }
 
     var grayIcon = L.icon({
-      iconUrl: 'google.jpg',
+      iconUrl: 'grey_marker.png',
       iconSize: [25, 41],
       iconAnchor: [12, 41],
       popupAnchor: [1, -34],
@@ -146,19 +158,31 @@
           var startIdx = cities.findIndex(city => city.coordinates.toString() === startCoords.toString());
           var endIdx = cities.findIndex(city => city.coordinates.toString() === endCoords.toString());
 
+          var startTime = performance.now();
           var path = aStar(graph, startIdx, endIdx);
+          var endTime = performance.now();
+          var timeTaken = (endTime - startTime).toFixed(2);
+
           var pathCoords = path.map(index => cities[index].coordinates);
 
-          // Animate the drawing of the path
+          // Animate the drawing of the path and calculate total distance
           var polyline = L.polyline([], { color: 'blue' }).addTo(map);
           var i = 0;
+          var totalDistance = 0;
+
           function drawPath() {
             if (i < pathCoords.length) {
               polyline.addLatLng(pathCoords[i]);
+              if (i > 0) {
+                totalDistance += calculateDistance(pathCoords[i - 1], pathCoords[i]);
+              }
               i++;
               setTimeout(drawPath, 500); // Adjust the delay as needed
+            } else {
+              document.getElementById('distanceDisplay').innerText = 'Distance: ' + totalDistance.toFixed(2) + ' km | Time: ' + timeTaken + ' ms';
             }
           }
+
           drawPath();
         }
       });
