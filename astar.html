@@ -30,6 +30,22 @@
   <script>
     var map = L.map('map').setView([0, 0], 2);
 
+    var iconA = L.icon({
+      iconUrl: 'iconA.png',
+      iconSize: [25, 41],
+      iconAnchor: [12, 41],
+      popupAnchor: [1, -34],
+      tooltipAnchor: [16, -28]
+    });
+
+    var iconB = L.icon({
+      iconUrl: 'iconB.png',
+      iconSize: [25, 41],
+      iconAnchor: [12, 41],
+      popupAnchor: [1, -34],
+      tooltipAnchor: [16, -28]
+    });
+
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(map);
@@ -118,10 +134,19 @@
       return [];
     }
 
-    var grayIcon = L.icon({
-      iconUrl: 'grey_marker.png',
+    var iconA = L.icon({
+      iconUrl: 'google.png',
       iconSize: [25, 41],
       iconAnchor: [12, 41],
+      popupAnchor: [1, -34],
+      tooltipAnchor: [16, -28]
+    });
+
+    var iconB = L.icon({
+      iconUrl: 'azure.png',
+      iconSize: [25, 41],
+      iconAnchor: [12, 41],
+     
       popupAnchor: [1, -34],
       tooltipAnchor: [16, -28]
     });
@@ -138,7 +163,13 @@
     var endCoords;
 
     cities.forEach(function (city, index) {
-      var marker = L.marker(city.coordinates, { icon: grayIcon }).addTo(map).bindPopup(city.name);
+      var marker;
+      if (index % 2 === 0) {
+        marker = L.marker(city.coordinates, { icon: iconA }).addTo(map).bindPopup(city.name);
+      } else {
+        marker = L.marker(city.coordinates, { icon: iconB }).addTo(map).bindPopup(city.name);
+      }
+
       marker.on('click', function () {
         if (!startSelected) {
           startCoords = city.coordinates;
