@@ -2,10 +2,7 @@
 <html>
   <head>
     <title>Algorithm Visualizations</title>
-    <link
-      rel="stylesheet"
-      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
-    />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
     <style>
       body {
         font-family: Arial, sans-serif;
@@ -22,9 +19,7 @@
         margin-top: 30px;
         border-collapse: collapse;
       }
-      table,
-      th,
-      td {
+      table, th, td {
         border: 1px solid black;
         padding: 8px;
         text-align: center;
@@ -32,7 +27,11 @@
       th {
         background-color: #f2f2f2;
       }
+      #tree {
+        margin-top: 20px;
+      }
     </style>
+    <script src="https://d3js.org/d3.v6.min.js"></script>
   </head>
   <body>
     <h1>Algorithm Visualizations</h1>
@@ -52,20 +51,9 @@
     <div class="algo">
       <h3>Algorithm for Dijkstra’s Algorithm:</h3>
       <ul>
-        <li>
-          Mark the source node with a current distance of 0 and the rest with
-          infinity.
-        </li>
-        <li>
-          Set the non-visited node with the smallest current distance as the
-          current node.
-        </li>
-        <li>
-          For each neighbor, N of the current node adds the current distance of
-          the adjacent node with the weight of the edge connecting 0->1. If it
-          is smaller than the current distance of Node, set it as the new
-          current distance of N.
-        </li>
+        <li>Mark the source node with a current distance of 0 and the rest with infinity.</li>
+        <li>Set the non-visited node with the smallest current distance as the current node.</li>
+        <li>For each neighbor, N of the current node adds the current distance of the adjacent node with the weight of the edge connecting 0->1. If it is smaller than the current distance of Node, set it as the new current distance of N.</li>
         <li>Mark the current node 1 as visited.</li>
         <li>Go to step 2 if there are any nodes are unvisited.</li>
       </ul>
@@ -87,39 +75,14 @@
     <div class="algo">
       <h3>Algorithm for Floyd Warshall Algorithm:</h3>
       <ul>
-        <li>
-          Initialize the solution matrix same as the input graph matrix as a
-          first step.
-        </li>
-        <li>
-          Then update the solution matrix by considering all vertices as an
-          intermediate vertex.
-        </li>
-        <li>
-          The idea is to pick all vertices one by one and updates all shortest
-          paths which include the picked vertex as an intermediate vertex in the
-          shortest path.
-        </li>
-        <li>
-          When we pick vertex number k as an intermediate vertex, we already
-          have considered vertices {0, 1, 2, .. k-1} as intermediate vertices.
-        </li>
-        <li>
-          GFor every pair (i, j) of the source and destination vertices
-          respectively, there are two possible cases.
+        <li>Initialize the solution matrix same as the input graph matrix as a first step.</li>
+        <li>Then update the solution matrix by considering all vertices as an intermediate vertex.</li>
+        <li>The idea is to pick all vertices one by one and updates all shortest paths which include the picked vertex as an intermediate vertex in the shortest path.</li>
+        <li>When we pick vertex number k as an intermediate vertex, we already have considered vertices {0, 1, 2, .. k-1} as intermediate vertices.</li>
+        <li>For every pair (i, j) of the source and destination vertices respectively, there are two possible cases.
           <ul>
-            <li>
-              k is not an intermediate vertex in shortest path from i to j. We
-              keep the value of dist[i][j] as it is.
-            </li>
-            <li>
-              k is an intermediate vertex in shortest path from i to j. We
-              update the value of
-              <b>
-                dist[i][j] as dist[i][k] + dist[k][j], if dist[i][j] >
-                dist[i][k] + dist[k][j]</b
-              >
-            </li>
+            <li>k is not an intermediate vertex in shortest path from i to j. We keep the value of dist[i][j] as it is.</li>
+            <li>k is an intermediate vertex in shortest path from i to j. We update the value of <b>dist[i][j] as dist[i][k] + dist[k][j], if dist[i][j] > dist[i][k] + dist[k][j]</b></li>
           </ul>
         </li>
       </ul>
@@ -133,48 +96,25 @@
         The A* algorithm is used to find the shortest path between two nodes in
         a graph. It uses heuristics to improve the efficiency of the search.
       </p>
-      <p>
-        <b>Time Complexity:</b> O(E) in the worst case, where E is the number of
-        edges examined.
-      </p>
+      <p><b>Time Complexity:</b> O(E) in the worst case, where E is the number of edges examined.</p>
     </div>
 
     <div class="algo">
       <h3>Algorithm for A* Search Algorithm:</h3>
       <ul>
         <li>Initialize the open list</li>
-        <li>
-          Initialize the closed list put the starting node on the open list (you
-          can leave its f at zero)
-        </li>
-        <li>
-          While the open list is not empty
+        <li>Initialize the closed list put the starting node on the open list (you can leave its f at zero)</li>
+        <li>While the open list is not empty
           <ul>
-            <li>
-              Find the node with the least f on the open list, call it "q"
-            </li>
+            <li>Find the node with the least f on the open list, call it "q"</li>
             <li>Pop q off the open list</li>
             <li>Generate q's 8 successors and set their parents to q</li>
-            <li>
-              For each successor
+            <li>For each successor
               <ul>
                 <li>if successor is the goal, stop search</li>
-                <li>
-                  else, compute both g and h for successor successor.g = q.g +
-                  distance between successor and q successor.h = distance from
-                  goal to successor (This can be done using many ways, we will
-                  discuss three heuristics- Manhattan, Diagonal and Euclidean
-                  Heuristics) successor.f = successor.g + successor.h
-                </li>
-                <li>
-                  if a node with the same position as successor is in the OPEN
-                  list which has a lower f than successor, skip this successor
-                </li>
-                <li>
-                  if a node with the same position as successor is in the CLOSED
-                  list which has a lower f than successor, skip this successor
-                  otherwise, add the node to the open list end (for loop)
-                </li>
+                <li>else, compute both g and h for successor successor.g = q.g + distance between successor and q successor.h = distance from goal to successor (This can be done using many ways, we will discuss three heuristics- Manhattan, Diagonal and Euclidean Heuristics) successor.f = successor.g + successor.h</li>
+                <li>if a node with the same position as successor is in the OPEN list which has a lower f than successor, skip this successor</li>
+                <li>if a node with the same position as successor is in the CLOSED list which has a lower f than successor, skip this successor otherwise, add the node to the open list end (for loop)</li>
               </ul>
             </li>
           </ul>
@@ -208,5 +148,153 @@
         <td>O(V)</td>
       </tr>
     </table>
+
+    <hr />
+    <div class="algo-description">
+      <h2>Huffman Encoding</h2>
+      <p>
+        Huffman encoding is a method used to compress data by assigning variable-length codes to input characters, with shorter codes assigned to more frequent characters.
+      </p>
+      <p><b>Time Complexity: </b> O(n log n), where n is the number of characters in the input string.</p>
+    </div>
+
+    <div class="algo">
+      <h3>Algorithm for Huffman Encoding:</h3>
+      <ul>
+        <li>Calculate the frequency of each character in the input string.</li>
+        <li>Build a Huffman tree based on the character frequencies.</li>
+        <li>Generate Huffman codes for each character in the tree.</li>
+        <li>Encode the input string using the Huffman codes.</li>
+      </ul>
+    </div>
+
+    <div>
+      <h3>Huffman Encoding Form</h3>
+      <form id="huffmanForm">
+          <label for="sentence">Enter a sentence:</label><br>
+          <input type="text" id="sentence" name="sentence"><br><br>
+          <input type="submit" value="Encode">
+      </form>
+      <div id="result"></div>
+      <div id="tree"></div>
+    </div>
+
+    <script>
+      document.getElementById('huffmanForm').addEventListener('submit', function(event) {
+          event.preventDefault();
+          const sentence = document.getElementById('sentence').value.replace(/\s+/g, '');
+          if (sentence.length === 0) {
+              alert('Please enter a non-empty sentence.');
+              return;
+          }
+          const frequency = calculateFrequency(sentence);
+          const huffmanTree = buildHuffmanTree(frequency);
+          const huffmanCodes = generateCodes(huffmanTree);
+          const encodedString = encodeString(sentence, huffmanCodes);
+          displayResults(sentence, frequency, huffmanCodes, encodedString);
+          visualizeTree(huffmanTree);
+      });
+
+      function calculateFrequency(str) {
+          const frequency = {};
+          for (let char of str) {
+              if (!frequency[char]) {
+                  frequency[char] = 0;
+              }
+              frequency[char]++;
+          }
+          return frequency;
+      }
+
+      function buildHuffmanTree(frequency) {
+          const nodes = Object.entries(frequency).map(([char, freq]) => ({ char, freq }));
+          while (nodes.length > 1) {
+              nodes.sort((a, b) => a.freq - b.freq);
+              const left = nodes.shift();
+              const right = nodes.shift();
+              const newNode = { char: null, freq: left.freq + right.freq, left, right };
+              nodes.push(newNode);
+          }
+          return nodes[0];
+      }
+
+      function generateCodes(node, code = '', codes = {}) {
+          if (node.char !== null) {
+              codes[node.char] = code;
+          } else {
+              generateCodes(node.left, code + '0', codes);
+              generateCodes(node.right, code + '1', codes);
+          }
+          return codes;
+      }
+
+      function encodeString(str, codes) {
+          return str.split('').map(char => codes[char]).join('');
+      }
+
+      function displayResults(sentence, frequency, huffmanCodes, encodedString) {
+          const resultDiv = document.getElementById('result');
+          resultDiv.innerHTML = `
+              <h2>Results</h2>
+              <p>Original Sentence: ${sentence}</p>
+              <p>Encoded String: ${encodedString}</p>
+              <h3>Character Frequencies</h3>
+              <table>
+                  <tr><th>Character</th><th>Frequency</th><th>Huffman Code</th></tr>
+                  ${Object.entries(frequency).map(([char, freq]) => `
+                      <tr>
+                          <td>${char}</td>
+                          <td>${freq}</td>
+                          <td>${huffmanCodes[char]}</td>
+                      </tr>`).join('')}
+              </table>
+              <h3>Compression Ratio</h3>
+              <p>${calculateCompressionRatio(sentence, encodedString)}</p>
+          `;
+      }
+
+      function calculateCompressionRatio(original, encoded) {
+          const originalBits = original.length * 8; // 8 bits per character
+          const encodedBits = encoded.length;
+          return (encodedBits / originalBits).toFixed(2);
+      }
+
+      function visualizeTree(tree) {
+          const width = 500;
+          const height = 500;
+          const svg = d3.select("#tree").append("svg")
+              .attr("width", width)
+              .attr("height", height);
+          
+          const root = d3.hierarchy(tree, d => [d.left, d.right].filter(d => d));
+          const treeLayout = d3.tree().size([width - 20, height - 20]);
+          treeLayout(root);
+
+          svg.selectAll('line')
+              .data(root.links())
+              .enter()
+              .append('line')
+              .attr('x1', d => d.source.x)
+              .attr('y1', d => d.source.y)
+              .attr('x2', d => d.target.x)
+              .attr('y2', d => d.target.y)
+              .attr('stroke', 'black');
+
+          const nodes = svg.selectAll('g')
+              .data(root.descendants())
+              .enter()
+              .append('g')
+              .attr('transform', d => `translate(${d.x},${d.y})`);
+
+          nodes.append('circle')
+              .attr('r', 5)
+              .attr('fill', 'black');
+
+          nodes.append('text')
+              .attr('dy', -10)
+              .attr('text-anchor', 'middle')
+              .text(d => d.data.char !== null ? d.data.char : '');
+      }
+    </script>
   </body>
 </html>
